@@ -1,6 +1,8 @@
 var PORT = 8000;
+
 var express = require('express');
 var app = express();
+
 var path = require('path');
 var methodOverride = require('method-override'); // for deletes in express
 var models = require('./models');
@@ -8,6 +10,8 @@ var models = require('./models');
 
 // Our model controllers (rather than routes)
 var application_controller = require('./controllers/application_controller');
+
+var burgers_controller = require('./controllers/burgers_controller');
 
 // override POST to have DELETE and PUT
 app.use(methodOverride('_method'))
@@ -29,14 +33,15 @@ app.set('view engine', 'handlebars');
 app.get('/', function(req, res) {
     models.Burger.findAll()
         .then(function(burger_data) {
-            //Promise based
-            //Change this to use a controller is highly recommended
             console.log(burger_data);
             res.send(burger_data);
 
         });
 
 });
+
+app.use('/', application_controller);
+app.use('/burgers', burgers_controller);
 
 //Implement the other HTTP Methods such as POST and DELETE
 
